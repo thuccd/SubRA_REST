@@ -14,6 +14,8 @@ import com.ACB.SubRA.entity.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -30,6 +32,8 @@ public class EmployeeService {
     RoleRepository roleRepository;
     private  static  final Logger log = LoggerFactory.getLogger(EmployeeService.class);
 
+    PasswordEncoder passwordEncoder;
+
     public Employee createEmployee(EmployeeCreationRequest request){
         log.info("Service create employee");
         Employee employee = new Employee();
@@ -43,7 +47,10 @@ public class EmployeeService {
         employee.setPhoneNumber(request.getPhoneNumber());
         employee.setIpAddress(request.getIpAddress());
         employee.setActive(request.isActive());
-        employee.setPassword(request.getPassword());
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
+        employee.setPassword(passwordEncoder.encode(request.getPassword()));
         Date date = new Date();
         employee.setCreatedTime(date);
         // 1 employee_certificate
