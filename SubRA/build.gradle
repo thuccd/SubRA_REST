@@ -41,8 +41,13 @@ dependencies {
 	// Source: https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
 	implementation("com.mysql:mysql-connector-j:9.5.0")
 	// import lib sercurity cryto
+
 	// Source: https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto
 	implementation("org.springframework.security:spring-security-crypto:7.0.6")
+
+	//import lib jwt
+	// Source: https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt
+	implementation("com.nimbusds:nimbus-jose-jwt:10.5")
 
 	implementation files('libs/BkavCrypto1.3.jar')
 	

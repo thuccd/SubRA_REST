@@ -9,7 +9,8 @@ public enum ErrorCode {
     USER_EXIT(1001, "User existed"),
     UNCATEGORIZED_EXCEPTION(9999,"uncategorized exceoption"),
     PASSWORD_INVALID(8888,"password invalid"),
-    INVALID_KEY(7777, "invalid key code")
+    INVALID_KEY(7777, "invalid key code"),
+    UNAUTHENTICATED(6666,"unauthenticated")
     ;
 
     ErrorCode(int code, String message) {

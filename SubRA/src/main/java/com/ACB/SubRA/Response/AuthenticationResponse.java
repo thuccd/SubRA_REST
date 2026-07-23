@@ -1,4 +1,4 @@
-package com.ACB.SubRA.Repository;
+package com.ACB.SubRA.Response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
