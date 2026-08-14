@@ -4,11 +4,15 @@ import com.ACB.SubRA.Exception.AppException;
 import com.ACB.SubRA.Exception.ErrorCode;
 import com.ACB.SubRA.Repository.EmployeeRepository;
 import com.ACB.SubRA.Request.AuthenticationRequest;
+import com.ACB.SubRA.Request.IntrospectRequest;
 import com.ACB.SubRA.Response.AuthenticationResponse;
+import com.ACB.SubRA.Response.IntrospectResponse;
 import com.ACB.SubRA.entity.Employee;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import lombok.Value;
 import lombok.experimental.NonFinal;
 import org.slf4j.Logger;
@@ -18,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -47,6 +52,23 @@ public class AuthenticationService {
 //    @NonFinal
 //    @Value("${jwt.refreshable-duration}")
 //    protected long REFRESHABLE_DURATION;
+
+    public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
+        var token = request.getToken();
+        JWSVerifier  jwsVerifier =  new MACVerifier(SIGNER_KEY.getBytes());
+
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        /*Lấy time của token check time hiện tại check hết hạn chưa*/
+        Date expityTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        var verified =  signedJWT.verify(jwsVerifier);
+
+
+        return IntrospectResponse.builder()
+                .valid(verified && expityTime.after(new Date()))
+                .build();
+
+    }
 
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -79,7 +101,7 @@ public class AuthenticationService {
                 .issuer("devteria.com")            // issuser từ cái j
                 .issueTime(new Date())              // date
                 .expirationTime(new Date(           // thừoi hạn cuủa token
-                        Instant.now().plus(1, ChronoUnit.SECONDS).toEpochMilli()))
+                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", "Custom")
                 .build();
