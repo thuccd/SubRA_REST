@@ -50,7 +50,10 @@ dependencies {
 	implementation("com.nimbusds:nimbus-jose-jwt:10.5")
 
 	implementation files('libs/BkavCrypto1.3.jar')
-	
+	//import spring security trong oauth2 có secure khi import vào những request hợp lệ mới đc
+	// Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-resource-server
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:4.0.7")
+
 
 }
 
